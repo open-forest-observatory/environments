@@ -12,6 +12,9 @@ etdev,rw 0 2' >> /etc/fstab"
 sudo mount -a
 # Set the directory so that any new files created in it have the "exouser" group
 sudo chmod -R g+s /ofo-data
+# Not sure if this works, but make sure any direcotries created are rwx by the group
+setfacl -dm g::rwx /ofo-data
+
 
 ## Increase SSH timeout: https://www.tecmint.com/increase-ssh-connection-timeout/ : make it 300 and 36 and uncomment it
 
@@ -68,6 +71,7 @@ sudo apt-get install r-base-dev
 sudo bash add_cranapt_jammy.sh
 
 ## TODO: Consider installing key R packages
+# usethis, credentials, here, tidyverse, sf, terra, raster, 
 
 ## Point the GUI desktop RStudio to the correct R version
 echo 'export RSTUDIO_WHICH_R="/usr/lib/R/bin/R"' >> ~/.profile
@@ -103,6 +107,27 @@ sudo usermod -aG exouser <username>
 ## Tips
 - For file storage (including code and data), only use /ofo-data/ (a mounted data volume with 5 TB that is shared across instances). Putting data anywhere else will fill up the instance (which only has 80 GB storage). An exception is files that are needed for linux OS configuration.
 - Rclone to copy files, and switch to your own user
+
+
+
+
+#### User-level config ####
+
+## Configure git for your username
+git config --global user.name 'Jane Doe'
+git config --global user.email 'jane@example.com'
+git config --global credential.helper 'cache --timeout=40000000' # number of seconds, about a year
+## Configure git creds
+# In R: credentials::set_github_pat()
+# and enter your personal access token
+# If that doesn't work or times out, option to store in enviornment file: https://happygitwithr.com/https-pat.html#pat-doesnt-persist-on-linux
+
+
+
+
+
+
+
 
 
 
