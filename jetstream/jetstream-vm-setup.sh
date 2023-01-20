@@ -4,16 +4,16 @@
 sudo mkdir /ofo-data
 sudo touch /etc/ceph/ceph.client.ofo-share-01.keyring
 sudo bash -c "echo [client.ofo-share-01] >> /etc/ceph/ceph.client.ofo-share-01.keyring"
-sudo bash -c "echo '    key = {KEY GOES HERE IT ENDS IN ==} >> /etc/ceph/ceph.client.ofo-share-01.keyring"
+sudo bash -c "echo '    key = {KEY GOES HERE. IT ENDS IN ==} >> /etc/ceph/ceph.client.ofo-share-01.keyring"
 sudo chmod 600 /etc/ceph/ceph.client.ofo-share-01.keyring
 sudo bash -c "echo '149.165.158.38:6789,149.165.158.22:6789,149.165.158.54:6789,149.165.158.70:6789,149.165.158.86:6789:/volumes/_nogroup/17faf14d-811c-4a0
-a-8c07-28ac9bb92df0/f562cd65-396f-400c-a58f-d8a21cd51024 /ofo-data ceph name=ofo-share-01,x-systemd.device-timeout=30,x-systemd.mount-timeout=30,noatime,_n
+a-8c07-28ac9bb92df0/f562cd65-396f-400c-a58f-d8a21cd51024 /ofo-share ceph name=ofo-share-01,x-systemd.device-timeout=30,x-systemd.mount-timeout=30,noatime,_n
 etdev,rw 0 2' >> /etc/fstab"
 sudo mount -a
 # Set the directory so that any new files created in it have the "exouser" group
-sudo chmod -R g+s /ofo-data
+sudo chmod -R g+s /ofo-share
 # Not sure if this works, but make sure any direcotries created are rwx by the group
-setfacl -dm g::rwx /ofo-data
+setfacl -dm g::rwx /ofo-share
 
 
 ## Increase SSH timeout: https://www.tecmint.com/increase-ssh-connection-timeout/ : make it 300 and 36 and uncomment it
@@ -29,13 +29,13 @@ sudo flatpak install flathub org.qgis.qgis
 ## Install Anaconda and initialize a Metashape env: https://docs.anaconda.com/anaconda/install/linux/
 wget https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh  # Can check web browser for latest version: # Can check web browser for latest version
 bash Anaconda3-2022.10-Linux-x86_64.sh # And have it initialize conda
-conda create --name meta184 python=3.8 PyYaml
+conda create --name meta200 python=3.8 PyYaml
 
 
 ## Install Metashape GUI and license
 cd ~/Downloads
-wget https://s3-eu-west-1.amazonaws.com/download.agisoft.com/metashape-pro_1_8_4_amd64.tar.gz
-sudo tar -C /opt -xvf metashape-pro_1_8_4_amd64.tar.gz
+wget https://s3-eu-west-1.amazonaws.com/download.agisoft.com/metashape-pro_2_0_0_amd64.tar.gz
+sudo tar -C /opt -xvf metashape-pro_2_0_0_amd64.tar.gz
 sudo chown -R exouser:exouser /opt/metashape-pro/
 sudo apt install libxcb-xinerama0
 # Here, copy the Cyverse Metashape floating license folder to /opt/metashape-pro/ , then...
@@ -57,9 +57,9 @@ Exec=/opt/metashape-pro/metashape.sh
 
 ## Install Metashape python module
 cd ~/Downloads
-wget https://s3-eu-west-1.amazonaws.com/download.agisoft.com/Metashape-1.8.4-cp35.cp36.cp37.cp38-abi3-linux_x86_64.whl
-conda activate meta184 # Need to do this for other Conda envs where it's desired too
-pip install Metashape-1.8.4-cp35.cp36.cp37.cp38-abi3-linux_x86_64.whl 
+wget https://s3-eu-west-1.amazonaws.com/download.agisoft.com/Metashape-2.0.0-cp35.cp36.cp37.cp38-abi3-linux_x86_64.whl
+conda activate meta200 # Need to do this for other Conda envs where it's desired too
+pip install Metashape-2.0.0-cp35.cp36.cp37.cp38-abi3-linux_x86_64.whl
 
 ## Install R: https://cran.r-project.org/bin/linux/ubuntu/fullREADME.html
 sudo bash -c "echo 'deb https://cloud.r-project.org/bin/linux/ubuntu jammy-cran40/' >> /etc/apt/sources.list"
@@ -95,10 +95,9 @@ sudo apt-get install sublime-text
 sudo apt install rclone
 
 ## Add new user (for personal rclone, git configs)
-# need command to create new user
-# add user to sudoers group, and exouser group so they can modify ofo-data
-usermod -aG sudo <username>
-sudo usermod -aG exouser <username>
+sudo adduser <username>
+# add user to sudoers group, and exouser group so they can modify ofo-share
+sudo usermod -aG sudo,exouser <username>
 # I believe these users will not have Anaconda, for that would need to copy.
 # TODO: consider copying exouser instead: https://unix.stackexchange.com/questions/204970/clone-linux-user-copy-user-based-on-another-one
 
