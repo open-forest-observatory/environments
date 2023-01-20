@@ -29,7 +29,8 @@ sudo flatpak install flathub org.qgis.qgis
 ## Install Anaconda and initialize a Metashape env: https://docs.anaconda.com/anaconda/install/linux/
 wget https://repo.anaconda.com/archive/Anaconda3-2022.10-Linux-x86_64.sh  # Can check web browser for latest version: # Can check web browser for latest version
 bash Anaconda3-2022.10-Linux-x86_64.sh # And have it initialize conda
-conda create --name meta200 python=3.8 PyYaml
+conda install nb_conda_kernels # this allows you to change conda environments within a notebook started from the base env
+conda create --name meta200 python=3.8 PyYaml ipykernel
 
 
 ## Install Metashape GUI and license
