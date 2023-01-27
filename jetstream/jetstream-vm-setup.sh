@@ -6,7 +6,8 @@ sudo touch /etc/ceph/ceph.client.ofo-share-01.keyring
 sudo bash -c "echo [client.ofo-share-01] >> /etc/ceph/ceph.client.ofo-share-01.keyring"
 sudo bash -c "echo '    key = {KEY GOES HERE. IT ENDS IN ==} >> /etc/ceph/ceph.client.ofo-share-01.keyring"
 sudo chmod 600 /etc/ceph/ceph.client.ofo-share-01.keyring
-sudo bash -c "echo '149.165.158.38:6789,149.165.158.22:6789,149.165.158.54:6789,149.165.158.70:6789,149.165.158.86:6789:/volumes/_nogroup/17faf14d-811c-4a0
+sudo bash -c "echo '149.165.158.38:6789,149.165.158.22:6789,149.165.158.54:6789,149.165.158.70:6789,149.165.158.86:6789:/volumes/_nogroup/17faf14d-811c-4a0a-8c07-28ac9bb92df0/f562cd65-396f-400c-a58f-d8a21cd51024 /ofo-share ceph name=ofo-share-01,x-systemd.device-timeout=30,x-systemd.mount-timeout=30,noatime,_netdev,rw 0 2' >> /etc/fstab"
+
 sudo mount -a
 # Set the directory so that any new files created in it have the "exouser" group
 sudo chmod -R g+s /ofo-share
