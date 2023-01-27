@@ -1,19 +1,25 @@
 ## Commands for manually setting up a fresh Ubuntu 22 featured image from Jetstream 2 to serve the needs of OFO dev
 
 ## Set up mount to the OFO manila share (ceph): https://docs.jetstream-cloud.org/general/manilaVM/
-sudo mkdir /ofo-data
+sudo mkdir /ofo-share
 sudo touch /etc/ceph/ceph.client.ofo-share-01.keyring
 sudo bash -c "echo [client.ofo-share-01] >> /etc/ceph/ceph.client.ofo-share-01.keyring"
 sudo bash -c "echo '    key = {KEY GOES HERE. IT ENDS IN ==} >> /etc/ceph/ceph.client.ofo-share-01.keyring"
 sudo chmod 600 /etc/ceph/ceph.client.ofo-share-01.keyring
 sudo bash -c "echo '149.165.158.38:6789,149.165.158.22:6789,149.165.158.54:6789,149.165.158.70:6789,149.165.158.86:6789:/volumes/_nogroup/17faf14d-811c-4a0
-a-8c07-28ac9bb92df0/f562cd65-396f-400c-a58f-d8a21cd51024 /ofo-share ceph name=ofo-share-01,x-systemd.device-timeout=30,x-systemd.mount-timeout=30,noatime,_n
-etdev,rw 0 2' >> /etc/fstab"
 sudo mount -a
 # Set the directory so that any new files created in it have the "exouser" group
 sudo chmod -R g+s /ofo-share
 # Not sure if this works, but make sure any direcotries created are rwx by the group
 setfacl -dm g::rwx /ofo-share
+
+## Install irods
+wget http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb
+sudo dpkg -i libssl1.1_1.1.0g-2ubuntu4_amd64.deb
+wget -qO - https://packages.irods.org/irods-signing-key.asc | sudo apt-key add -
+echo "deb [arch=amd64] https://packages.irods.org/apt/ focal main" | sudo tee /etc/apt/sources.list.d/renci-irods.list
+sudo apt-get update
+sudo apt install irods-icommands
 
 
 ## Increase SSH timeout: https://www.tecmint.com/increase-ssh-connection-timeout/ : make it 300 and 36 and uncomment it
